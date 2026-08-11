@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#f7f6f3" />
+<title>每日一小步｜完成歷程與文章結果（手機版範例）</title>
+<style>
+:root{
+  --ink:#1B2430; --muted:#5B6472; --canvas:#F7F6F3; --surface:#FFFFFF;
+  --line:#E3E1DA; --blue:#2752E7; --blue-dark:#1B3CB8; --blue-soft:#EAF0FF;
+  --navy:#14213D; --green:#1F8A5F; --green-soft:#E7F3EE; --amber:#B4791F;
+  --amber-soft:#FBF1DF; --radius:14px; --shadow:0 1px 2px rgba(16,24,40,.05),0 8px 24px rgba(16,24,40,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--canvas);scroll-behavior:smooth}
+body{
+  margin:0;color:var(--ink);background:var(--canvas);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;
+}
+.topbar{position:sticky;top:0;z-index:30;background:rgba(247,246,243,.95);border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}
+.topbar-inner{width:min(1120px,100%);margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:12px}
+.brand{font-weight:800;font-size:17px;white-space:nowrap}
+.brand span{color:var(--blue)}
+.crumb{font-size:13px;color:var(--muted);font-weight:700}
+.score-pill{margin-left:auto;padding:6px 14px;background:var(--blue-soft);color:var(--blue);border-radius:999px;font-size:13px;font-weight:800;white-space:nowrap}
+.done-pill{padding:6px 14px;background:var(--green-soft);color:var(--green);border-radius:999px;font-size:13px;font-weight:800;white-space:nowrap}
+
+.nav{position:sticky;top:57px;z-index:25;background:rgba(247,246,243,.95);border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}
+.nav-inner{width:min(1120px,100%);margin:0 auto;padding:10px 24px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{flex:none;padding:7px 15px;background:#fff;border:1.5px solid var(--line);border-radius:999px;font-size:13px;font-weight:800;color:var(--muted);text-decoration:none}
+.nav a:hover{border-color:var(--blue);color:var(--blue)}
+
+.wrap{width:min(1120px,100%);margin:0 auto;padding:40px 24px 64px}
+.eyebrow{display:inline-block;padding:5px 14px;background:var(--blue-soft);color:var(--blue);border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.08em;margin-bottom:14px}
+.eyebrow.ok{background:var(--green-soft);color:var(--green)}
+h1{font-size:36px;line-height:1.25;font-weight:800;letter-spacing:-.015em;margin:0 0 10px}
+h2{font-size:22px;font-weight:800;margin:0 0 14px}
+h3{font-size:16.5px;font-weight:800;margin:0 0 10px}
+.lede{color:var(--muted);font-size:15.5px;margin:0 0 24px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+.note{background:var(--blue-soft);border-radius:10px;padding:13px 15px;font-size:13.5px;color:#25408F}
+.sec{scroll-margin-top:130px}
+.sec-label{font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin:36px 0 14px}
+
+.hero-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:26px;align-items:start}
+.progress-head{display:flex;justify-content:space-between;font-size:13px;font-weight:800;margin-bottom:8px}
+.progress{height:12px;background:#EAE8E2;border-radius:999px;overflow:hidden}
+.progress>span{display:block;height:100%;width:100%;background:var(--green);border-radius:999px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 8px;text-align:center}
+.stat .n{font-size:24px;font-weight:800;color:var(--blue)}
+.stat .l{font-size:11.5px;color:var(--muted);font-weight:700}
+
+.gates-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.gate{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.gate .gh{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.gate .dot{display:grid;place-items:center;width:28px;height:28px;flex:none;border-radius:50%;background:var(--green);color:#fff;font-size:13px;font-weight:900}
+.gate .gt{font-weight:800;font-size:14.5px}
+.gate .gt small{display:block;font-weight:600;color:var(--muted);font-size:12px;margin-top:2px}
+.gate .tag{margin-left:auto;flex:none;font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--green-soft);color:var(--green)}
+.gate.deep .tag{background:#E8EBF3;color:var(--navy)}
+.gate .q{font-size:12.5px;color:var(--muted);margin-bottom:9px;padding:9px 12px;background:var(--canvas);border-radius:8px}
+.gate .a{font-size:14px;line-height:1.7}
+.kws{display:flex;gap:6px;margin-bottom:9px;flex-wrap:wrap}
+.kw{padding:3px 11px;background:var(--navy);color:#fff;border-radius:999px;font-size:11.5px;font-weight:700}
+.checks-ok{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px}
+.ck-ok{font-size:11px;font-weight:800;color:var(--green);background:var(--green-soft);padding:3px 10px;border-radius:999px}
+
+.asm-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+.flow-step{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.step-n{display:grid;place-items:center;width:26px;height:26px;flex:none;border-radius:50%;background:var(--ink);color:#fff;font-size:12.5px;font-weight:800}
+.flow-step .tx{font-size:14px;flex:1}
+.flow-step .tx b{display:block}
+.quote-box{background:var(--canvas);border:1px dashed #B8BFCB;border-radius:8px;padding:11px 13px;font-size:12.5px;color:var(--muted);margin-top:7px;line-height:1.65}
+.marks{display:grid;gap:8px;margin-top:8px}
+.mark{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px 12px;font-size:13.5px}
+.mark .m{flex:none;font-size:11px;font-weight:900;padding:2px 9px;border-radius:999px}
+.mark.keep .m{background:var(--green-soft);color:var(--green)}
+.mark.del .m{background:#FBEBEB;color:#D64545}
+.mark.edit .m{background:var(--amber-soft);color:var(--amber)}
+
+.article-wrap{display:grid;grid-template-columns:280px 1fr;gap:26px;align-items:start}
+.article-side{position:sticky;top:130px}
+.article{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:44px 48px}
+.article .a-tag{text-align:center;font-size:11.5px;font-weight:800;letter-spacing:.12em;color:var(--muted);margin-bottom:10px}
+.article h2{text-align:center;font-size:26px;margin-bottom:6px}
+.article .a-sub{text-align:center;font-size:13px;color:var(--muted);margin-bottom:22px}
+.article p{font-size:15.5px;line-height:1.9;margin-bottom:14px;color:#2A3342}
+.article p:last-child{margin-bottom:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:46px;padding:11px 22px;border:none;border-radius:10px;font-weight:800;font-size:14.5px;text-decoration:none;cursor:pointer}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.side-actions{display:grid;gap:9px;margin-top:14px}
+
+.fb-grid{display:grid;grid-template-columns:340px 1fr;gap:26px;align-items:start}
+.rub-total{display:flex;align-items:center;justify-content:space-between;background:var(--navy);color:#fff;border-radius:12px;padding:18px 20px;margin-bottom:14px}
+.rub-total .t{font-weight:800;font-size:14.5px}
+.rub-total .s{font-size:26px;font-weight:900;color:#9BB8FF}
+.rub-line{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.rub-line .rn{flex:1;font-size:13.5px;font-weight:700}
+.rub-line .bars{display:flex;gap:4px}
+.rub-line .bars i{width:18px;height:8px;border-radius:4px;background:#E6E4DE}
+.rub-line .bars i.on{background:var(--blue)}
+.rub-line .sc{width:26px;text-align:right;font-size:13.5px;font-weight:900;color:var(--blue)}
+.fb{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:10px;font-size:14px;line-height:1.7}
+.fb b{display:block;font-size:12.5px;margin-bottom:4px}
+.fb-good{border-left:4px solid var(--green)} .fb-good b{color:var(--green)}
+.fb-q{border-left:4px solid var(--blue)} .fb-q b{color:var(--blue)}
+.fb-next{border-left:4px solid var(--amber)} .fb-next b{color:var(--amber)}
+.foot{text-align:center;color:var(--muted);font-size:12.5px;padding:34px 16px 0}
+
+@media (max-width:900px){
+  .hero-grid,.gates-grid,.asm-grid,.article-wrap,.fb-grid{grid-template-columns:1fr}
+  .article-side{position:static}
+  .article{padding:28px 22px}
+  h1{font-size:28px}
+  .wrap{padding:26px 16px 48px}
+  .nav{top:57px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+<style id="dedicated-mobile-layout">
+html{background:var(--canvas)}
+body{width:min(100%,480px);min-height:100vh;margin:0 auto;background:var(--canvas)}
+.topbar-inner{width:100%;padding:10px 14px;gap:8px}
+.crumb{display:none}
+.score-pill,.done-pill{padding:5px 9px;font-size:11px}
+.nav{top:53px}
+.nav-inner{width:100%;padding:8px 12px;gap:6px}
+.nav a{padding:6px 11px;font-size:12px}
+.wrap{width:100%;padding:24px 16px 48px}
+h1{font-size:27px}
+h2{font-size:20px}
+.card{padding:18px}
+.hero-grid,.gates-grid,.asm-grid,.article-wrap,.fb-grid{grid-template-columns:1fr;gap:12px}
+.stat-grid{gap:7px}
+.stat{padding:11px 5px}
+.stat .n{font-size:20px}
+.gate{padding:15px}
+.article{font-size:15px;line-height:1.85}
+@media (min-width:481px){body{border-left:1px solid var(--line);border-right:1px solid var(--line)}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">樂寫<span>學習網</span></div>
+    <div class="crumb">／ 每日一小步・完成歷程範例</div>
+    <div class="score-pill">★ 65 積分</div>
+    <div class="done-pill">✓ 已完成七關</div>
+  </div>
+</header>
+<nav class="nav" aria-label="快速導覽">
+  <div class="nav-inner">
+    <a href="#book">書籍</a><a href="#gates">七關紀錄</a><a href="#asm">組裝歷程</a><a href="#article">最終文章</a><a href="#feedback">志工回饋</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <!-- 書籍 -->
+  <section class="sec" id="book">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow ok">完成歷程範例</span>
+        <h1>《小王子》的閱讀思考歷程</h1>
+        <p class="lede">王同學・國中・故事類・節奏：每天一關（實際花了 9 天）</p>
+        <div class="card" style="padding:18px 20px">
+          <div class="progress-head"><span>第 7／7 關</span><span>文章素材 6／6</span></div>
+          <div class="progress"><span></span></div>
+          <div class="stat-grid">
+            <div class="stat"><div class="n">7</div><div class="l">關卡完成</div></div>
+            <div class="stat"><div class="n">2</div><div class="l">深思挑戰通過</div></div>
+            <div class="stat"><div class="n">1</div><div class="l">篇文章產出</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>為什麼選這本書？<span style="font-weight:600;color:var(--muted);font-size:12.5px">（開始頁填寫）</span></h3>
+        <p style="font-size:14.5px;line-height:1.75">同學跟我說「這本書會讓你想哭」。我不太相信一本童話可以做到，所以決定自己讀讀看。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 七關 -->
+  <section class="sec" id="gates">
+    <div class="sec-label">七關閱讀紀錄・全部通過</div>
+    <div class="gates-grid">
+      <div class="gate">
+        <div class="gh"><div class="dot">✓</div><div class="gt">第 1 關・選擇與預測<small>完整引導＋範例＋句型</small></div><span class="tag">通過 ＋5</span></div>
+        <div class="q">看封面、封底和目錄後，你預測這本書在談什麼？</div>
+        <div class="a">封面上小王子一個人站在很小的星球上，我預測這是一本離家旅行的冒險故事。我想讀它，是因為同學說「這本書會讓你想哭」，我想知道一本童話為什麼會讓人哭。</div>
+        <div class="checks-ok"><span class="ck-ok">✓ 具體內容</span><span class="ck-ok">✓ 自己的話</span><span class="ck-ok">✓ 說明理由</span></div>
+      </div>
+      <div class="gate">
+        <div class="gh"><div class="dot">✓</div><div class="gt">第 2 關・用自己的話說<small>完整引導＋範例＋句型</small></div><span class="tag">通過 ＋5</span></div>
+        <div class="q">這本書主要在說什麼？說給沒讀過的人聽。</div>
+        <div class="a">小王子本來住在 B612 星球，照顧一朵玫瑰。他離開後拜訪六個星球，遇到國王、愛慕虛榮的人、酒鬼、商人、點燈人和地理學家，最後來到地球，遇見狐狸和墜機的飛行員。</div>
+        <div class="checks-ok"><span class="ck-ok">✓ 具體內容</span><span class="ck-ok">✓ 自己的話</span><span class="ck-ok">✓ 說明理由</span></div>
+      </div>
+      <div class="gate">
+        <div class="gh"><div class="dot">✓</div><div class="gt">第 3 關・找到關鍵內容<small>完整引導＋範例＋句型</small></div><span class="tag">通過 ＋5</span></div>
+        <div class="q">選一段話、一個事件或一個觀念，說明它為什麼重要。</div>
+        <div class="a">狐狸說：「真正重要的東西，用眼睛是看不見的。」這句話很重要，因為它回答了小王子一路上的疑問——他本來不懂為什麼要在乎那朵驕傲的玫瑰，聽完狐狸說「馴養」，他才明白。</div>
+        <div class="checks-ok"><span class="ck-ok">✓ 具體內容</span><span class="ck-ok">✓ 自己的話</span><span class="ck-ok">✓ 說明理由</span></div>
+      </div>
+      <div class="gate deep">
+        <div class="gh"><div class="dot" style="background:var(--navy)">✓</div><div class="gt">第 4 關・深思挑戰一<small>無範例・無句型・先寫三個關鍵詞</small></div><span class="tag">深思 ＋10</span></div>
+        <div class="kws"><span class="kw">大人</span><span class="kw">數字</span><span class="kw">馴養</span></div>
+        <div class="q">作者最希望讀者看見、或相信什麼？你從哪裡看出來的？</div>
+        <div class="a">我覺得作者想讓大人看見：我們習慣用數字衡量一切，卻忘了東西真正的價值。書裡商人忙著數星星，說星星是他的財產，但他從來沒有抬頭看過星星。這讓我判斷作者是站在「用心」這一邊的，因為他讓每個只講用途的大人看起來都很孤單。</div>
+        <div class="checks-ok"><span class="ck-ok">✓ 具體內容</span><span class="ck-ok">✓ 自己的話</span><span class="ck-ok">✓ 說明理由</span></div>
+      </div>
+      <div class="gate">
+        <div class="gh"><div class="dot">✓</div><div class="gt">第 5 關・建立連結<small>簡短引導</small></div><span class="tag">通過 ＋5</span></div>
+        <div class="q">這本書讓你想到自己的經驗、看過的事或知識嗎？</div>
+        <div class="a">我想到自己加了很多群組，聯絡人很多，但真正會聊天的只有兩三個。這很像書裡說的：數字很多，不代表關係很多。還有那個點燈人，一直重複開燈關燈，很像我們每天按表操課卻不知道為什麼。</div>
+        <div class="checks-ok"><span class="ck-ok">✓ 具體內容</span><span class="ck-ok">✓ 自己的話</span><span class="ck-ok">✓ 說明理由</span></div>
+      </div>
+      <div class="gate">
+        <div class="gh"><div class="dot">✓</div><div class="gt">第 6 關・形成觀點<small>簡短引導</small></div><span class="tag">通過 ＋5</span></div>
+        <div class="q">哪個地方你同意、不同意，或仍有疑問？為什麼？</div>
+        <div class="a">我同意「關係需要花時間才會重要」。但我本來有一個疑問：玫瑰那麼驕傲又愛說謊，小王子為什麼還要回去找她？後來我想通了——正因為他為她澆過水、擋過風，那朵玫瑰才變成「他的」玫瑰。</div>
+        <div class="checks-ok"><span class="ck-ok">✓ 具體內容</span><span class="ck-ok">✓ 自己的話</span><span class="ck-ok">✓ 說明理由</span></div>
+      </div>
+      <div class="gate deep" style="grid-column:1/-1">
+        <div class="gh"><div class="dot" style="background:var(--navy)">✓</div><div class="gt">第 7 關・深思挑戰二<small>無範例・無句型・先寫三個關鍵詞</small></div><span class="tag">深思 ＋10</span></div>
+        <div class="kws"><span class="kw">童話</span><span class="kw">現實</span><span class="kw">提醒</span></div>
+        <div class="q">如果有人不同意你的看法，他可能會怎麼說？你會怎麼回應？</div>
+        <div class="a">反對的人可能會說：這只是感傷的童話，長大本來就要務實，數錢和算成績有什麼不對？我的回應是：務實不等於遺忘。商人數星星沒有錯，錯的是他從此不再看星星。正因為我們很容易遺忘，才需要這種書一直提醒。</div>
+        <div class="checks-ok"><span class="ck-ok">✓ 具體內容</span><span class="ck-ok">✓ 自己的話</span><span class="ck-ok">✓ 說明理由</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 組裝歷程 -->
+  <section class="sec" id="asm">
+    <div class="sec-label">文章組裝歷程・選擇：AI 協作（已揭露）</div>
+    <div class="asm-grid">
+      <div class="card">
+        <h3 style="margin-bottom:14px">協作流程</h3>
+        <div class="flow-step"><div class="step-n">1</div><div class="tx"><b>系統整理七關原始答案</b><span>只使用學生自己寫的內容。</span></div></div>
+        <div class="flow-step"><div class="step-n">2</div><div class="tx"><b>選擇協助項目</b><span>☑ 整理文章結構　☑ 產生第一版草稿</span></div></div>
+        <div class="flow-step"><div class="step-n">3</div><div class="tx"><b>學生使用的提示（貼回）</b>
+          <div class="quote-box">「請根據以下七段我的閱讀紀錄，整理成一篇 600 字讀書心得的大綱和第一版草稿。不要新增我沒寫過的內容，不要改我的觀點。七段紀錄如下：……」</div>
+        </div></div>
+        <div class="flow-step" style="margin-bottom:0"><div class="step-n">4</div><div class="tx"><b>繳交最終版本</b><span>學生修改後的文章，見下方。</span></div></div>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:12px">AI 初稿 vs 我的想法：三處標記</h3>
+        <div class="marks">
+          <div class="mark keep"><span class="m">保留</span><span>AI 排的段落順序（開頭→證據→觀點→結尾）比我原本想的清楚，保留。</span></div>
+          <div class="mark del"><span class="m">刪除</span><span>AI 把狐狸的話解讀成「要愛護地球環境」——這不是書的意思，刪掉。</span></div>
+          <div class="mark edit"><span class="m">改寫</span><span>AI 寫「我非常感動」，我改成具體場景：群組很多、會聊天的只有兩三個。</span></div>
+        </div>
+        <div class="flow-step" style="margin-top:14px"><div class="step-n">5</div><div class="tx"><b>為什麼改？</b><span>「AI 不知道我真正想講的是友誼，所以感動的部分我要自己寫。」</span></div></div>
+        <p class="note" style="margin-top:8px">✅ 歷程透明：提示、AI 初稿、三處標記、修改理由皆已留存。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 最終文章 -->
+  <section class="sec" id="article">
+    <div class="sec-label">產出結果・最終文章</div>
+    <div class="article-wrap">
+      <aside class="article-side">
+        <div class="card" style="padding:18px 20px">
+          <h3 style="margin-bottom:6px">文章資訊</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.8">作者：王同學（國中）<br>書籍：《小王子》<br>全文約 620 字<br>路徑：AI 協作（已揭露）</p>
+        </div>
+        <div class="side-actions">
+          <button class="btn btn-ghost" type="button">⬇ 下載文章</button>
+          <button class="btn btn-primary" type="button">依回饋再修改 ＋20</button>
+        </div>
+        <p class="note" style="margin-top:14px;font-size:12.5px">文章與完整歷程預設只有學生本人看得見；是否公開，由學生自己決定。</p>
+      </aside>
+      <div class="article">
+        <div class="a-tag">我的讀書心得</div>
+        <h2>看不見的東西，才最值得花時間</h2>
+        <div class="a-sub">王同學｜《小王子》｜全文約 620 字</div>
+        <p>同學跟我說《小王子》「會讓你想哭」。我不太相信一本童話可以做到，所以決定自己讀讀看。封面上，小王子一個人站在很小的星球上，我猜這是一本離家旅行的冒險故事——讀完之後才發現，它比冒險故事多得多。</p>
+        <p>小王子本來住在 B612 星球，照顧一朵玫瑰。離開之後，他拜訪了六個星球，遇到國王、愛慕虛榮的人、酒鬼、商人、點燈人和地理學家，最後來到地球，遇見狐狸和墜機的飛行員。</p>
+        <p>整本書裡我覺得最關鍵的，是狐狸說的：「真正重要的東西，用眼睛是看不見的。」這句話回答了小王子一路上的疑問。他本來不懂，為什麼要在乎那朵驕傲又愛說謊的玫瑰；聽完狐狸說的「馴養」，他才明白——正因為他為她澆過水、擋過風，那朵玫瑰才變成「他的」玫瑰。</p>
+        <p>我認為作者真正想讓大人看見的，是我們習慣用數字衡量一切，卻忘了東西真正的價值。書裡的商人忙著數星星，說星星是他的財產，卻從來沒有抬頭看過星星。作者讓每個只講用途的大人看起來都很孤單，所以我判斷他站在「用心」這一邊。</p>
+        <p>讀的時候我想到自己：通訊軟體裡的群組很多，真正會聊天的只有兩三個。數字很多，不代表關係很多。我同意作者說的「關係需要花時間」，但我也曾想反駁——玫瑰那麼驕傲，小王子為什麼還要回去？後來我懂了，這正是作者要說的：愛不是因為對方完美，而是因為你付出過時間。</p>
+        <p>也許有人會說，這只是感傷的童話，長大本來就要務實。但務實不等於遺忘。數星星沒有錯，錯的是從此不再看星星。正因為我們很容易遺忘，才需要這樣的書一直提醒。</p>
+        <p>如果你也曾經懷疑「重要的東西到底是什麼」，我推薦你讀《小王子》。它不會給你答案，但它會讓你開始問對問題。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 志工回饋 -->
+  <section class="sec" id="feedback">
+    <div class="sec-label">志工老師回饋・已送出</div>
+    <div class="fb-grid">
+      <div>
+        <div class="rub-total"><div class="t">作品品質評量<br><small style="font-weight:600;opacity:.75">完成速度不列入評分</small></div><div class="s">19<small style="font-size:13px;opacity:.75">／20</small></div></div>
+        <div class="card" style="padding:18px 20px">
+          <div class="rub-line"><span class="rn">書本證據</span><span class="bars"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="sc">4</span></div>
+          <div class="rub-line"><span class="rn">理解與解釋</span><span class="bars"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="sc">4</span></div>
+          <div class="rub-line"><span class="rn">個人觀點</span><span class="bars"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="sc">3</span></div>
+          <div class="rub-line"><span class="rn">修改品質</span><span class="bars"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="sc">4</span></div>
+          <div class="rub-line" style="margin-bottom:0"><span class="rn">歷程透明</span><span class="bars"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="sc">4</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="fb fb-good"><b>① 一個做得好的地方</b>你用「商人數星星」來支持你的判斷，證據選得很準；而且你注意到「作者讓大人看起來很孤單」，這是超越情節的閱讀。</div>
+        <div class="fb fb-q"><b>② 一個最值得思考的問題</b>狐狸說「重要的東西看不見」——如果這句話也適用在成績上，你會怎麼重新看待自己的段考？</div>
+        <div class="fb fb-next"><b>③ 一個下一步修改任務</b>第 5 段的「群組」例子很好，請再寫出具體的一次經驗（哪一天、哪個群組、發生什麼事），文章會更有力。</div>
+      </div>
+    </div>
+  </section>
+
+  <p class="foot">此為範例頁面：書籍、答案、文章與回饋皆為示意內容。</p>
+</div>
+</body>
+</html>
