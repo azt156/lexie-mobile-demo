@@ -123,6 +123,7 @@ h3{font-size:16.5px;font-weight:800;margin:0 0 10px}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 <style id="dedicated-mobile-layout">
+:root{--green:#166B48;--amber:#855506}
 html{background:var(--canvas)}
 body{width:min(100%,480px);min-height:100vh;margin:0 auto;background:var(--canvas)}
 .topbar-inner{width:100%;padding:10px 14px;gap:8px}
@@ -141,6 +142,9 @@ h2{font-size:20px}
 .stat .n{font-size:20px}
 .gate{padding:15px}
 .article{font-size:15px;line-height:1.85}
+.mark.del .m{color:#A72D2D}
+.btn:disabled{cursor:not-allowed;opacity:1;background:#F1F0EC;color:#5B6472;border:1.5px solid var(--line)}
+.prototype-actions-note{font-size:12px;line-height:1.6;color:var(--muted)}
 @media (min-width:481px){body{border-left:1px solid var(--line);border-right:1px solid var(--line)}}
 </style>
 </head>
@@ -271,8 +275,9 @@ h2{font-size:20px}
           <p style="font-size:13px;color:var(--muted);line-height:1.8">作者：王同學（國中）<br>書籍：《小王子》<br>全文約 620 字<br>路徑：AI 協作（已揭露）</p>
         </div>
         <div class="side-actions">
-          <button class="btn btn-ghost" type="button">⬇ 下載文章</button>
-          <button class="btn btn-primary" type="button">依回饋再修改 ＋20</button>
+          <button class="btn btn-ghost" type="button" disabled aria-describedby="prototype-actions-note">⬇ 下載文章</button>
+          <button class="btn btn-primary" type="button" disabled aria-describedby="prototype-actions-note">依回饋再修改 ＋20</button>
+          <p id="prototype-actions-note" class="prototype-actions-note">此為靜態範例，下載文章與依回饋修改功能尚未開放。</p>
         </div>
         <p class="note" style="margin-top:14px;font-size:12.5px">文章與完整歷程預設只有學生本人看得見；是否公開，由學生自己決定。</p>
       </aside>
